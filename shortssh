@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [[ $1 && $2 ]]; then
+
+  KEY_DIRECTORY=`printenv SHORTSSH_KEY_DIRECTORY`
+
+  if [[ $KEY_DIRECTORY ]]; then
+
+    if [ -d $KEY_DIRECTORY ]; then
+
+      KEY_FILE="$KEY_DIRECTORY/$1.pem"
+
+      if [ -f $KEY_FILE ]; then
+        ssh -i $KEY_FILE -o "StrictHostKeyChecking no" $2
+      else
+        echo "[+] File $1.pem not found in $KEY_DIRECTORY"
+      fi
+
+    else
+      echo "[+] Cannot find directory: $KEY_DIRECTORY"
+    fi
+  else
+    echo "[+] Set the location of your identity key file as SHORTSSH_KEY_DIRECTORY in your environment variables"
+  fi
+else
+  echo "SAMPLE USAGE: shortssh key-file ubuntu@123.456.78.90"
+fi
+
